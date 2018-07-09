@@ -1,6 +1,5 @@
 const Amqp = require('../amqp');
 const util = require('util');
-const merge = require('lodash.merge');
 
 module.exports = function(...params) {
     let parent = Amqp(...params);
@@ -8,7 +7,7 @@ module.exports = function(...params) {
     function ConsumeAmqpPort() {
         parent && parent.apply(this, arguments);
 
-        this.config = merge({
+        this.config = this.merge({
             id: 'consume',
             logLevel: 'debug',
             config: {},

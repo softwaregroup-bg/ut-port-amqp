@@ -1,6 +1,5 @@
 const Amqp = require('../amqp');
 const util = require('util');
-const merge = require('lodash.merge');
 const opts = {contentType: 'application/json'};
 
 module.exports = function(...params) {
@@ -9,7 +8,7 @@ module.exports = function(...params) {
     function ProduceAmqpPort() {
         parent && parent.apply(this, arguments);
 
-        this.config = merge({
+        this.config = this.merge({
             id: 'produce',
             logLevel: 'debug',
             config: {},

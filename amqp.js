@@ -1,6 +1,5 @@
 const ScriptPort = require('ut-port-script');
 const util = require('util');
-const merge = require('lodash.merge');
 const amqp = require('amqplib');
 const url = require('url');
 const fs = require('fs');
@@ -12,7 +11,7 @@ module.exports = function(...params) {
     function AmqpPort() {
         parent && parent.apply(this, arguments);
 
-        this.config = merge({
+        this.config = this.merge({
             hostname: 'localhost',
             port: '5672',
             ssl: false,
