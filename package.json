@@ -1,0 +1,74 @@
+{
+  "name": "ut-port-amqp",
+  "version": "0.4.3",
+  "description": "AMQP Protocol wrapper",
+  "main": "index.js",
+  "dependencies": {
+    "amqplib": "^0.5.1",
+    "ut-bus": "6.3.0",
+    "ut-port-httpserver": "10.0.0",
+    "ut-port-script": "6.0.0",
+    "ut-run": "9.3.0",
+    "lodash.merge": "4.6.0"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1",
+    "jest-junit": "^3.7.0",
+    "ut-tools": "^5.32.10"
+  },
+  "scripts": {
+    "lint": "ut-lint .",
+    "release": "ut-release",
+    "changelog": "ut-changelog",
+    "check": "ut-check",
+    "cover": "ut-cover",
+    "lint-js": "ut-lint-js .",
+    "postpublish": "ut-postpublish",
+    "postversion": "ut-postversion",
+    "precommit": "ut-precommit",
+    "prepublish": "ut-prepublish",
+    "prepush": "ut-prepush",
+    "pretest": "ut-pretest",
+    "preversion": "ut-preversion",
+    "precover": "ut-precover",
+    "test": "ut-test",
+    "jest": "jest",
+    "version": "ut-version",
+    "jenkins": "ut-jenkins",
+    "gitlab": "ut-gitlab"
+  },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/__test__/*.js"
+    ],
+    "testResultsProcessor": "jest-junit",
+    "cache": false,
+    "moduleDirectories": [
+      "node_modules"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*js"
+    ],
+    "coverageReporters": [
+      "lcov",
+      "cobertura",
+      "text"
+    ]
+  },
+  "keywords": [
+    "queue",
+    "message",
+    "broker",
+    "amqp"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:softwaregroup-bg/ut-port-amqp.git"
+  },
+  "homepage": "https://github.com/softwaregroup-bg/ut-port-amqp"
+}

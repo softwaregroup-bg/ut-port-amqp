@@ -1,0 +1,8 @@
+/.project
+*sublime*
+/node_modules/**/*
+temp
+*.log
+.vscode
+coverage
+junit.xml
