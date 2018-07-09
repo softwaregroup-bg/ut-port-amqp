@@ -94,7 +94,7 @@ The following configuration must be added in the JSON file:
         "channelMax": "0",
         "heartbeat": "0",
         "retryInterval": "10000",
-        "retryCount": "10"
+        "retryCount": "10",
         "exchange": {
             "sms": {
                 "type": "direct",

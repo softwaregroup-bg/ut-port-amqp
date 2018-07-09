@@ -5,11 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "amqplib": "^0.5.1",
-    "ut-bus": "6.3.0",
-    "ut-port-httpserver": "10.0.0",
-    "ut-port-script": "6.0.0",
-    "ut-run": "9.3.0",
-    "lodash.merge": "4.6.0"
+    "ut-port-script": "6.0.0"
   },
   "devDependencies": {
     "jest": "^21.2.1",
