@@ -6,3 +6,4 @@ temp
 .vscode
 coverage
 junit.xml
+package-lock.json
