@@ -31,8 +31,8 @@ module.exports = function(...params) {
             const method = [this.config.id, exchange, routingKey].filter(v => v).join('.');
             const {opts = {}} = this.config.exchange[exchange].queue;
             return this.bus.importMethod(method)(content)
-                .then(res => opts.noAck ? Promise.resolve() : this.channel.ack(msg))
-                .catch(e => this.channel.nack(msg));
+                .then(() => opts.noAck ? Promise.resolve() : this.channel.ack(msg))
+                .catch(() => this.channel.nack(msg));
         };
 
         if (this.channel === null || this.channel === undefined) {
