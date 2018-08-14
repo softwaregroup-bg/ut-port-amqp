@@ -17,19 +17,26 @@ module.exports = function(...params) {
     }
 
     ConsumeAmqpPort.prototype.ready = function() {
-        const consumer = (msg) => {
-            let content = msg.properties.contentType && msg.properties.contentType === 'application/json'
-                ? JSON.parse(msg.content) : msg.content;
-
-            return this.bus.importMethod([this.config.id, msg.fields.exchange, msg.fields.routingKey].filter(value => { return value; }).join('.'))(content)
-                .then(() => {
-                    let config = this.config.exchange[msg.fields.exchange];
-
-                    if ('opts' in config.queue && !config.queue.opts.noAck) {
-                        return this.channel.ack(msg);
-                    }
-
-                    return Promise.resolve();
+        const consumer = msg => {
+            let content;
+            switch (msg.properties.contentType) {
+                case 'application/json':
+                    content = JSON.parse(msg.content);
+                    break;
+                default:
+                    content = msg.content;
+                    break;
+            }
+            const {exchange, routingKey} = msg.fields;
+            const method = [this.config.id, exchange, routingKey].filter(v => v).join('.');
+            const {opts = {}} = this.config.exchange[exchange].queue;
+            return this.bus.importMethod(method)(content)
+                .then(res => {
+                    return opts.noAck ? Promise.resolve() : this.channel.ack(msg);
+                })
+                .catch(e => {
+                    this.channel.nack(msg);
+                    throw e;
                 });
         };
 
