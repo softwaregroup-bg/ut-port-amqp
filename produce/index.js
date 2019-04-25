@@ -1,38 +1,38 @@
-const Amqp = require('../amqp');
-const util = require('util');
-const opts = {contentType: 'application/json'};
+const amqp = require('../amqp');
+const errors = require('./errors.json');
+const publishOptions = {contentType: 'application/json'};
 
-module.exports = function(...params) {
-    let parent = Amqp(...params);
-
-    function ProduceAmqpPort() {
-        parent && parent.apply(this, arguments);
-
-        this.config = this.merge({
+module.exports = ({utBus, registerErrors, ...rest}) => class AmqpProducer extends amqp({utBus, registerErrors, ...rest}) {
+    get defaults() {
+        return {
             id: 'produce',
-            logLevel: 'debug',
-            config: {},
-            context: {}
-        }, this.config);
+            type: 'produce',
+            namespace: 'produce',
+            logLevel: 'debug'
+        };
     }
 
-    ProduceAmqpPort.prototype.exec = function(params, $meta) {
-        let [exchange, routingKey] = $meta.method.split('.').slice(1, 3);
-        let config = this.config.exchange[exchange];
-
-        if (this.channel === null) {
-            return;
-        }
-
-        return this.channel.assertExchange(exchange, config.type, config.opts)
-            .then(r => {
-                return this.channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(params)), opts);
-            });
-    };
-
-    if (parent) {
-        util.inherits(ProduceAmqpPort, parent);
+    async init(...params) {
+        const result = await super.init(...params);
+        Object.assign(this.errors, registerErrors(errors));
+        return result;
     }
 
-    return ProduceAmqpPort;
+    async exec(...params) {
+        if (this.channel === null) return;
+        const $meta = params && params.length > 1 && params[params.length - 1];
+        const [exchange, routingKey] = $meta.method.split('.').slice(-2);
+        const {type, options} = this.config.exchange[exchange];
+
+        await this.channel.assertExchange(exchange, type, options);
+
+        return this.channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(params[0])), publishOptions);
+    }
+
+    async start(...params) {
+        utBus.attachHandlers(this.methods, this.config.imports);
+        const result = await super.start(...params);
+        this.pull(this.exec, this.config.context);
+        return result;
+    }
 };

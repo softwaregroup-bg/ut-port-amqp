@@ -4,13 +4,13 @@
   "description": "AMQP Protocol wrapper",
   "main": "index.js",
   "dependencies": {
-    "amqplib": "^0.5.1",
-    "ut-port-script": "6.0.0"
+    "amqplib": "^0.5.3"
   },
   "devDependencies": {
     "jest": "^21.2.1",
     "jest-junit": "^3.7.0",
-    "ut-tools": "^5.32.10"
+    "ut-tools": "^6.15.0",
+    "tap": "^12.6.2"
   },
   "scripts": {
     "lint": "ut-lint .",
