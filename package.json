@@ -4,12 +4,10 @@
   "description": "AMQP Protocol wrapper",
   "main": "index.js",
   "dependencies": {
-    "amqplib": "^0.5.3"
+    "amqplib": "0.5.3"
   },
   "devDependencies": {
-    "jest": "^21.2.1",
-    "jest-junit": "^3.7.0",
-    "ut-tools": "^6.15.0",
+    "ut-tools": "^6.16.2",
     "tap": "^12.6.2"
   },
   "scripts": {
@@ -32,28 +30,6 @@
     "version": "ut-version",
     "jenkins": "ut-jenkins",
     "gitlab": "ut-gitlab"
-  },
-  "jest": {
-    "testMatch": [
-      "<rootDir>/__test__/*.js"
-    ],
-    "testResultsProcessor": "jest-junit",
-    "cache": false,
-    "moduleDirectories": [
-      "node_modules"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules"
-    ],
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "**/*js"
-    ],
-    "coverageReporters": [
-      "lcov",
-      "cobertura",
-      "text"
-    ]
   },
   "keywords": [
     "queue",
