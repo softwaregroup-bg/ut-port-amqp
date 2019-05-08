@@ -1,3 +1,7 @@
+# [1.0.0](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v1.0.0-next.0...v1.0.0) (2019-05-08)
+
+
+
 <a name="0.4.5"></a>
 ## [0.4.5](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v0.4.4...v0.4.5) (2018-07-09)
 

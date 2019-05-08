@@ -1,6 +1,6 @@
 {
   "name": "ut-port-amqp",
-  "version": "1.0.0-next.0",
+  "version": "1.0.0",
   "description": "AMQP Protocol wrapper",
   "main": "index.js",
   "dependencies": {
