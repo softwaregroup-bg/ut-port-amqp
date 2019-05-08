@@ -7,7 +7,7 @@
     "amqplib": "0.5.3"
   },
   "devDependencies": {
-    "ut-tools": "^6.16.2",
+    "ut-tools": "^6.17.1",
     "tap": "^12.6.2"
   },
   "scripts": {
