@@ -128,9 +128,14 @@ In order to publish a message to an exchange you need to call the following meth
 ```
 
 Please note the above example will try to add a message into
-exchange named **sms** with routing key **clients**. In case
-you are using exchange type *fanout* then the routing key
-is not mandatory.
+exchange named **sms** with routing key **clients**.
+If the method name contains more than 3 parts
+separated by dots (e.g. 'a.b.c.d.e')
+then everything after the exchange
+will be taken as a routing key.
+(In this example that would be 'c.d.e')
+In case you are using exchange type *fanout*
+then the routing key is not mandatory.
 
 There are 2 ways of publishing a message to an exchange
 
@@ -143,11 +148,12 @@ There are 2 ways of publishing a message to an exchange
 
 2) A message with additional parameters (such as headers, appId, etc..).
 In this case you will need to fragment the message
-into 2 parts - payload and options:
+into 3 parts - payload, routingKey, options:
 
 ```js
     const msg = {
         payload: {someKey: 'someValue'},
+        routingKey: 'a.b.c',
         options: {
             headers: {
                 __TypeId__: 'com.softwaregroup.audit.dto.AuditDto'
@@ -156,6 +162,10 @@ into 2 parts - payload and options:
     };
     bus.importMethod('producer.sms.clients')(msg);
 ```
+Note that the options and routingKey are optional.
+If routingKey is not provided then it will be obtained
+as described above.
+
 #### Consumer port
 
 Similar to the producer port, the consumer needs to be created in the implementation:
