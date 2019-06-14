@@ -8,7 +8,8 @@ module.exports = ({utBus, registerErrors, ...rest}) => class AmqpProducer extend
             id: 'produce',
             type: 'produce',
             namespace: 'produce',
-            logLevel: 'debug'
+            logLevel: 'debug',
+            routingKeyDelimiter: '.'
         };
     }
 
@@ -18,15 +19,41 @@ module.exports = ({utBus, registerErrors, ...rest}) => class AmqpProducer extend
         return result;
     }
 
-    async exec(...params) {
+    async exec(msg, ...rest) {
         if (this.channel === null) return;
-        const $meta = params && params.length > 1 && params[params.length - 1];
-        const [exchange, routingKey] = $meta.method.split('.').slice(-2);
-        const {type, options} = this.config.exchange[exchange];
 
-        await this.channel.assertExchange(exchange, type, options);
+        if (!msg) throw this.errors['port.missingParameters']();
 
-        return this.channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(params[0])), publishOptions);
+        const $meta = rest[rest.length - 1];
+        if (!$meta) throw this.errors['port.missingMeta']();
+
+        const {method} = $meta;
+        if (!method) throw utBus.errors['bus.missingMethod']();
+
+        let payload, options, routingKey;
+
+        if (msg.payload) {
+            payload = msg.payload;
+            options = {...publishOptions, ...msg.options};
+            routingKey = msg.routingKey;
+        } else {
+            payload = msg;
+            options = publishOptions;
+        }
+
+        const [exchange, ...routingKeyTokens] = method.split('.').slice(1);
+        const {type, opts} = this.config.exchange[exchange];
+
+        if (!routingKey) routingKey = routingKeyTokens.join(this.config.routingKeyDelimiter);
+
+        await this.channel.assertExchange(exchange, type, opts);
+
+        return this.channel.publish(
+            exchange,
+            routingKey,
+            Buffer.from(JSON.stringify(payload)),
+            options
+        );
     }
 
     async start(...params) {
