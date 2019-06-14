@@ -1,3 +1,13 @@
+## [1.0.1](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v1.0.0...v1.0.1) (2019-06-14)
+
+
+### Bug Fixes
+
+* add possibility to provide custom options when publishing to an exchange ([f9d0b16](https://github.com/softwaregroup-bg/ut-port-amqp/commit/f9d0b16))
+* possibility to provide routingKey in message ([37140ca](https://github.com/softwaregroup-bg/ut-port-amqp/commit/37140ca))
+
+
+
 # [1.0.0](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v1.0.0-next.0...v1.0.0) (2019-05-08)
 
 
