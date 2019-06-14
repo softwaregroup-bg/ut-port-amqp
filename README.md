@@ -121,10 +121,10 @@ the remote host is refusing the connection. The `"exchange"` property
 holds information related to the exchanges that we are going to
 produce messages to.
 
-To push a message into exchange you need to call the following method:
+In order to publish a message to an exchange you need to call the following method:
 
 ```js
-    bus.importMethod('producer.sms.clients')({content: 'text' ...})...
+    bus.importMethod('producer.sms.clients')(msg);
 ```
 
 Please note the above example will try to add a message into
@@ -132,6 +132,30 @@ exchange named **sms** with routing key **clients**. In case
 you are using exchange type *fanout* then the routing key
 is not mandatory.
 
+There are 2 ways of publishing a message to an exchange
+
+1) A message without any additional parameters:
+
+```js
+    const payload = {someKey: 'someValue'};
+    bus.importMethod('producer.sms.clients')(payload);
+```
+
+2) A message with additional parameters (such as headers, appId, etc..).
+In this case you will need to fragment the message
+into 2 parts - payload and options:
+
+```js
+    const msg = {
+        payload: {someKey: 'someValue'},
+        options: {
+            headers: {
+                __TypeId__: 'com.softwaregroup.audit.dto.AuditDto'
+            }
+        }
+    };
+    bus.importMethod('producer.sms.clients')(msg);
+```
 #### Consumer port
 
 Similar to the producer port, the consumer needs to be created in the implementation:

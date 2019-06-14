@@ -18,15 +18,39 @@ module.exports = ({utBus, registerErrors, ...rest}) => class AmqpProducer extend
         return result;
     }
 
-    async exec(...params) {
+    async exec(msg, ...rest) {
         if (this.channel === null) return;
-        const $meta = params && params.length > 1 && params[params.length - 1];
-        const [exchange, routingKey] = $meta.method.split('.').slice(-2);
-        const {type, options} = this.config.exchange[exchange];
 
-        await this.channel.assertExchange(exchange, type, options);
+        if (!msg) throw this.errors['port.missingParameters']();
 
-        return this.channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(params[0])), publishOptions);
+        const $meta = rest[rest.length - 1];
+        if (!$meta) throw this.errors['port.missingMeta']();
+
+        const {method} = $meta;
+        if (!method) throw utBus.errors['bus.missingMethod']();
+
+        const [exchange, routingKey] = method.split('.').slice(1, 3);
+
+        const {type, opts} = this.config.exchange[exchange];
+
+        let payload, options;
+
+        if (msg.payload) {
+            payload = msg.payload;
+            options = {...publishOptions, ...msg.options};
+        } else {
+            payload = msg;
+            options = publishOptions;
+        }
+
+        await this.channel.assertExchange(exchange, type, opts);
+
+        return this.channel.publish(
+            exchange,
+            routingKey,
+            Buffer.from(JSON.stringify(payload)),
+            options
+        );
     }
 
     async start(...params) {
