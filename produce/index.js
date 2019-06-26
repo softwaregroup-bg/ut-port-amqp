@@ -8,8 +8,7 @@ module.exports = ({utBus, registerErrors, ...rest}) => class AmqpProducer extend
             id: 'produce',
             type: 'produce',
             namespace: 'produce',
-            logLevel: 'debug',
-            routingKeyDelimiter: '.'
+            logLevel: 'debug'
         };
     }
 
@@ -30,21 +29,25 @@ module.exports = ({utBus, registerErrors, ...rest}) => class AmqpProducer extend
         const {method} = $meta;
         if (!method) throw utBus.errors['bus.missingMethod']();
 
-        let payload, options, routingKey;
+        let payload, options, routingKey, exchange;
 
         if (msg.payload) {
             payload = msg.payload;
             options = {...publishOptions, ...msg.options};
             routingKey = msg.routingKey;
+            exchange = msg.exchange;
         } else {
             payload = msg;
             options = publishOptions;
         }
 
-        const [exchange, ...routingKeyTokens] = method.split('.').slice(1);
-        const {type, opts} = this.config.exchange[exchange];
+        const tokens = method.split('.').slice(1);
 
-        if (!routingKey) routingKey = routingKeyTokens.join(this.config.routingKeyDelimiter);
+        if (!exchange) exchange = routingKey ? tokens.join('.') : tokens.shift();
+
+        if (!routingKey) routingKey = tokens.join('.');
+
+        const {type, opts} = this.config.exchange[exchange];
 
         await this.channel.assertExchange(exchange, type, opts);
 
