@@ -121,10 +121,13 @@ the remote host is refusing the connection. The `"exchange"` property
 holds information related to the exchanges that we are going to
 produce messages to.
 
-In order to publish a message to an exchange you need to call the following method:
+There are 2 ways of publishing a message to an exchange
+
+1) A message without any additional parameters:
 
 ```js
-    bus.importMethod('producer.sms.clients')(msg);
+    const payload = {someKey: 'someValue'};
+    bus.importMethod('producer.sms.clients')(payload);
 ```
 
 Please note the above example will try to add a message into
@@ -137,14 +140,7 @@ will be taken as a routing key.
 In case you are using exchange type *fanout*
 then the routing key is not mandatory.
 
-There are 2 ways of publishing a message to an exchange
 
-1) A message without any additional parameters:
-
-```js
-    const payload = {someKey: 'someValue'};
-    bus.importMethod('producer.sms.clients')(payload);
-```
 
 2) A message with additional parameters (such as headers, appId, etc..).
 In this case you will need to fragment the message
@@ -153,7 +149,8 @@ into 3 parts - payload, routingKey, options:
 ```js
     const msg = {
         payload: {someKey: 'someValue'},
-        routingKey: 'a.b.c',
+        exchange: 'a.b',
+        routingKey: 'c.d',
         options: {
             headers: {
                 __TypeId__: 'com.softwaregroup.audit.dto.AuditDto'
@@ -162,9 +159,22 @@ into 3 parts - payload, routingKey, options:
     };
     bus.importMethod('producer.sms.clients')(msg);
 ```
-Note that the options and routingKey are optional.
-If routingKey is not provided then it will be obtained
-as described above.
+
+Note that exchange, routingKey and options are optional.
+Which means this leads us to the following permutation:
+
+* both `exchange` and `routingKey` are provided
+
+* `exchange` is provided but `routingKey` is not.
+Then `routingKey` will become **sms.clients**
+
+* `exchange` is not provided but `routingKey` is.
+Then `exchange` will become **sms.clients**
+
+* Neither `exchange` nor `routingKey` is provided.
+Then `exchange` will become **sms**
+And `routingKey` will become **clients**
+
 
 #### Consumer port
 
