@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v1.0.1...v1.1.0) (2019-06-26)
+
+
+### Features
+
+* provide possibility to pass the exchange throug the payload ([463e35e](https://github.com/softwaregroup-bg/ut-port-amqp/commit/463e35e))
+
+
+
 ## [1.0.1](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v1.0.0...v1.0.1) (2019-06-14)
 
 
