@@ -1,3 +1,13 @@
+<a name="0.4.6"></a>
+## [0.4.6](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v0.4.5...v0.4.6) (2019-06-27)
+
+
+### Bug Fixes
+
+* make version 0.4.x work with custom message format which includes payload, options, exchange and routingKey ([29ec172](https://github.com/softwaregroup-bg/ut-port-amqp/commit/29ec172))
+
+
+
 <a name="0.4.5"></a>
 ## [0.4.5](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v0.4.4...v0.4.5) (2018-07-09)
 
