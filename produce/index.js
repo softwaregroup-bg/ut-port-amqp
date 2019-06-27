@@ -1,6 +1,6 @@
 const Amqp = require('../amqp');
 const util = require('util');
-const opts = {contentType: 'application/json'};
+const publishOptions = {contentType: 'application/json'};
 
 module.exports = function(...params) {
     let parent = Amqp(...params);
@@ -16,18 +16,45 @@ module.exports = function(...params) {
         }, this.config);
     }
 
-    ProduceAmqpPort.prototype.exec = function(params, $meta) {
-        let [exchange, routingKey] = $meta.method.split('.').slice(1, 3);
-        let config = this.config.exchange[exchange];
+    ProduceAmqpPort.prototype.exec = async function(msg, ...rest) {
+        if (this.channel === null) return;
 
-        if (this.channel === null) {
-            return;
+        if (!msg) throw this.errors['port.missingParameters']();
+
+        const $meta = rest[rest.length - 1];
+        if (!$meta) throw this.errors['port.missingMeta']();
+
+        const {method} = $meta;
+        if (!method) throw this.bus.errors['bus.missingMethod']();
+
+        let payload, options, routingKey, exchange;
+
+        if (msg.payload) {
+            payload = msg.payload;
+            options = {...publishOptions, ...msg.options};
+            routingKey = msg.routingKey;
+            exchange = msg.exchange;
+        } else {
+            payload = msg;
+            options = publishOptions;
         }
 
-        return this.channel.assertExchange(exchange, config.type, config.opts)
-            .then(r => {
-                return this.channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(params)), opts);
-            });
+        const tokens = method.split('.').slice(1);
+
+        if (!exchange) exchange = routingKey ? tokens.join('.') : tokens.shift();
+
+        if (!routingKey) routingKey = tokens.join('.');
+
+        const {type, opts} = this.config.exchange[exchange];
+
+        await this.channel.assertExchange(exchange, type, opts);
+
+        return this.channel.publish(
+            exchange,
+            routingKey,
+            Buffer.from(JSON.stringify(payload)),
+            options
+        );
     };
 
     if (parent) {
