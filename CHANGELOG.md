@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v1.1.0...v1.1.1) (2019-07-15)
+
+
+### Bug Fixes
+
+* log connection errors ([aad8eb9](https://github.com/softwaregroup-bg/ut-port-amqp/commit/aad8eb9))
+
+
+
 # [1.1.0](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v1.0.1...v1.1.0) (2019-06-26)
 
 
