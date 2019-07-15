@@ -55,6 +55,12 @@ module.exports = ({utPort, registerErrors}) => class Amqp extends utPort {
             let connection;
             try {
                 connection = await amqp.connect(connectionUrl, socketOptions);
+                connection.on('close', () => {
+                    if (!this.config.reconnect) return;
+                    attempt = 0;
+                    this.channel = null;
+                    connect();
+                });
             } catch (err) {
                 if (err.code === 'ECONNREFUSED' && this.config.reconnect && attempt++ < this.config.retryCount) {
                     return new Promise(resolve => setTimeout(() => resolve(connect()), this.config.retryInterval));
@@ -63,11 +69,8 @@ module.exports = ({utPort, registerErrors}) => class Amqp extends utPort {
             }
             this.connection = connection.connection;
             this.channel = await connection.createChannel();
-            connection.on('close', () => {
-                if (!this.config.reconnect) return;
-                attempt = 0;
-                this.channel = null;
-                connect();
+            this.channel.on('error', e => {
+                if (this.log.error) this.log.error(e);
             });
         };
 
