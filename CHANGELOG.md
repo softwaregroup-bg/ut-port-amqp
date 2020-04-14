@@ -1,3 +1,7 @@
+## [1.1.2](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v1.1.1...v1.1.2) (2020-04-14)
+
+
+
 ## [1.1.1](https://github.com/softwaregroup-bg/ut-port-amqp/compare/v1.1.0...v1.1.1) (2019-07-15)
 
 
