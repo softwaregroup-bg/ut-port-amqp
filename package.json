@@ -4,10 +4,10 @@
   "description": "AMQP Protocol wrapper",
   "main": "index.js",
   "dependencies": {
-    "amqplib": "0.5.3"
+    "amqplib": "0.5.5"
   },
   "devDependencies": {
-    "ut-tools": "^6.17.1",
+    "ut-tools": "^6.33.4",
     "tap": "^12.6.2"
   },
   "scripts": {
